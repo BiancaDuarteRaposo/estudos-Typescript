@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faça seu registro</title>
+    <link rel="stylesheet" href="./css/style.css" type="text/css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <form action="" class="form" id="form">
+        <h2>Faça seu cadastro</h2>
+        <div class="form-fields">
+          <label for="username">Seu usuário</label>
+          <input
+            type="text"
+            class="username"
+            id="username"
+            placeholder="Seu usuário"
+          />
+          <span class="error-message"
+            >Campo inválido por algum motivo qualquer</span
+          >
+        </div>
+        <div class="form-fields">
+          <label for="email">Seu email</label>
+          <input
+            type="email"
+            class="email"
+            id="email"
+            placeholder="Seu email"
+          />
+          <span class="error-message">Campo inválido por algum motivo</span>
+        </div>
+        <div class="form-fields">
+          <label for="password">Sua senha</label>
+          <input
+            type="password"
+            class="password"
+            id="password"
+            placeholder="Sua senha"
+          />
+          <span class="error-message">Campo inválido por algum motivo</span>
+        </div>
+        <div class="form-fields">
+          <label for="password">Repetir senha</label>
+          <input
+            type="password"
+            class="password2"
+            id="password2"
+            placeholder="Repetir senha"
+          />
+          <span class="error-message">Campo inválido por algum motivo</span>
+        </div>
+        <div class="form-fields">
+          <button type="submit">Enviar</button>
+        </div>
+      </form>
+    </div>
+    <script type="text/javascript" src="../dist/init.js"></script>
+  </body>
+</html>
