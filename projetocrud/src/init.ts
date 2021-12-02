@@ -1,8 +1,29 @@
-const form =document.querySelector('.form')as HTMLFormElement;
-const username =document.querySelector('.username')as HTMLInputElement;
-const email =document.querySelector('.email')as HTMLInputElement;
-const password =document.querySelector('.password')as HTMLInputElement;
-const password2 =document.querySelector('.password2')as HTMLInputElement;
+interface Usuario {
+    username: string;
+    email: string;
+    password: string;
+    password2: string;
+    button: boolean;
+}
+
+
+const form =document.querySelector('.form') as HTMLFormElement;
+const username =document.querySelector('.username') as HTMLInputElement;
+const email =document.querySelector('.email') as HTMLInputElement;
+const password =document.querySelector('.password') as HTMLInputElement;
+const password2 =document.querySelector('.password2') as HTMLInputElement;
+const button =document.querySelector("#form > div:nth-child(6) > button")as HTMLButtonElement;
+
+button.disabled = true;
+
+function habilitarBotaoSubmit(form: HTMLFormElement){
+    let erros: NodeListOf<Element> = form.querySelectorAll('.show-error-message');
+    if (erros.length > 0){
+        button.disabled = true;
+    } else {
+        button.disabled = false;
+    }
+}
 
 // definindo o evento do form
 form.addEventListener('submit', function(event: Event){
@@ -10,6 +31,22 @@ form.addEventListener('submit', function(event: Event){
     event.preventDefault();
     excluirMSGErro(form); // exclui a mensagem de erro com o campo alterado
     verificarCamposVazios(username, email, password, password2);
+
+    let usuario : Usuario = {
+        username: username.value,
+        email: email.value,
+        password: password.value,
+        password2: password2.value,
+        button: false
+    }
+    console.log(usuario);
+
+    username.value="";
+    email.value="";
+    password.value="";
+    password2.value="";
+    button.disabled = true;
+
 });
 
 //Função que vai verificar se os campos estão vazios
@@ -48,6 +85,7 @@ form.querySelectorAll('input').forEach(elemento=>{
             verificarSenha(password, password2);
             }
         }
+        habilitarBotaoSubmit(form);
     })
 })
 
@@ -60,3 +98,4 @@ function verificarSenha(password:HTMLInputElement, password2:HTMLInputElement):v
         apresentaMSGErro(password2, "As senhas devem ser iguais.")
     }
 }
+

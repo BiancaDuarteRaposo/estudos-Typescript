@@ -4,12 +4,36 @@ const username = document.querySelector('.username');
 const email = document.querySelector('.email');
 const password = document.querySelector('.password');
 const password2 = document.querySelector('.password2');
+const button = document.querySelector("#form > div:nth-child(6) > button");
+button.disabled = true;
+function habilitarBotaoSubmit(form) {
+    let erros = form.querySelectorAll('.show-error-message');
+    if (erros.length > 0) {
+        button.disabled = true;
+    }
+    else {
+        button.disabled = false;
+    }
+}
 // definindo o evento do form
 form.addEventListener('submit', function (event) {
     //eu quero que eele cancele o evento de submeter para ir para uma outra página
     event.preventDefault();
     excluirMSGErro(form); // exclui a mensagem de erro com o campo alterado
     verificarCamposVazios(username, email, password, password2);
+    let usuario = {
+        username: username.value,
+        email: email.value,
+        password: password.value,
+        password2: password2.value,
+        button: false
+    };
+    console.log(usuario);
+    username.value = "";
+    email.value = "";
+    password.value = "";
+    password2.value = "";
+    button.disabled = true;
 });
 //Função que vai verificar se os campos estão vazios
 function verificarCamposVazios(...inputs) {
@@ -45,6 +69,7 @@ form.querySelectorAll('input').forEach(elemento => {
                 verificarSenha(password, password2);
             }
         }
+        habilitarBotaoSubmit(form);
     });
 });
 function verificarSenha(password, password2) {
