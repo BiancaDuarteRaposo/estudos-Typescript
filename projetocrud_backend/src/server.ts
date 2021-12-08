@@ -18,24 +18,49 @@ connection.schema
 
 //leitura de usuario
 app.get("/usuarios", (req, res) => {
-  res.json({
-    status: "ok",
-    mensagem: "requisição com GET",
-  });
+  let usuarios = connection
+    .select()
+    .table("usuarios")
+    .then((usuarios) => {
+      res.json({
+        status: "ok",
+        mensagem: "requisição com GET",
+        usuarios: usuarios,
+      });
+    });
 });
 
 app.post("/usuarios", (req, res) => {
   let usuario = req.body;
   usuario.created_at = new Date();
+
   connection("usuarios")
-    .insert(usuario)
-    .then((dados) => {
-      console.log("Usuário inserido com sucesso");
-      res.json({
-        status: "ok",
-        mensagem: "Usuário inserido com sucesso",
-        dados: dados,
-      });
+    .where("email", usuario.email)
+    .then((usuarios) => {
+      if (usuarios.length > 0) {
+        res.json({
+          status: "erro",
+          mensagem: "Email já cadastrado",
+        });
+      } else {
+        connection("usuarios")
+          .insert(usuarios)
+          .then((dados) => {
+            console.log("Usuário inserido com sucesso");
+            res.json({
+              status: "ok",
+              mensagem: "Usuário inserido com sucesso",
+              dados: dados,
+            });
+          })
+          .catch((erro) => {
+            res.json({
+              status: "erro",
+              mensagem: "Erro ao inserir o usuário",
+              erro: erro,
+            });
+          });
+      }
     })
     .catch((erro) => {
       res.json({
@@ -52,11 +77,18 @@ app.delete("/usuarios/:id", (req, res) => {
   connection("usuarios")
     .where("id", id)
     .delete()
-    .then(() => {
-      res.json({
-        status: "ok",
-        mensagem: "Usuário deletado com sucesso",
-      });
+    .then((resultado) => {
+      if (resultado == 1) {
+        res.json({
+          status: "ok",
+          mensagem: "Usuário deletado com sucesso",
+        });
+      } else {
+        res.json({
+          status: "warning",
+          mensagem: "Nenhum registro encontrado para deletar",
+        });
+      }
     })
     .catch((erro) => {
       res.json({
@@ -66,13 +98,28 @@ app.delete("/usuarios/:id", (req, res) => {
     });
 });
 
-app.patch("/:id", (req, res) => {
+app.patch("/usuarios/:id", (req, res) => {
   let id = req.params.id;
-  res.json({
-    status: "ok",
-    mensagem: "requisição com PATCH",
-    id: id,
-  });
+  let usuario = req.body;
+  usuario.updated_at = new Date();
+
+  connection("usuarios")
+    .where("id", id)
+    .update(usuario)
+    .then((resultado) => {
+      if (resultado == 1) {
+        res.json({
+          status: "ok",
+          mensagem: "Dados atualizados com sucesso!",
+        });
+      } else {
+        res.json({
+          status: "warning",
+          mensagem: "Nenhum registro atualizado...",
+        });
+      }
+    })
+    .catch((erro) => console.log(erro));
 });
 
 app.listen(port, () => console.log("Servidor rodando"));
