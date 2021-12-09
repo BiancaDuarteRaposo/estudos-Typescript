@@ -1,9 +1,10 @@
 import express from "express";
 import connection from "./database";
+import dotenv from "dotenv";
 
-const port = 3000;
-const app = express();
-app.use(express.json());
+dotenv.config({
+  path: process.env.NODE_ENV === "development" ? ".env.development" : ".env",
+});
 
 connection.schema
   .createTableIfNotExists("usuarios", (table) => {
@@ -15,6 +16,12 @@ connection.schema
   })
   .then(() => console.log("Tabela criada"))
   .catch((erro) => console.log(erro));
+
+const app = express();
+
+app.use(express.json());
+
+const port = process.env.PORT;
 
 //leitura de usuario
 app.get("/usuarios", (req, res) => {
@@ -31,11 +38,11 @@ app.get("/usuarios", (req, res) => {
 });
 
 app.post("/usuarios", (req, res) => {
-  let usuario = req.body;
-  usuario.created_at = new Date();
+  let usuarios = req.body;
+  usuarios.created_at = new Date();
 
   connection("usuarios")
-    .where("email", usuario.email)
+    .where("email", usuarios.email)
     .then((usuarios) => {
       if (usuarios.length > 0) {
         res.json({
@@ -56,7 +63,7 @@ app.post("/usuarios", (req, res) => {
           .catch((erro) => {
             res.json({
               status: "erro",
-              mensagem: "Erro ao inserir o usuário",
+              mensagem: "Erro ao cadastrar!",
               erro: erro,
             });
           });
@@ -65,7 +72,7 @@ app.post("/usuarios", (req, res) => {
     .catch((erro) => {
       res.json({
         status: "erro",
-        mensagem: "Erro ao inserir o usuário",
+        mensagem: "Erro ao inserir o usuário!",
         erro: erro,
       });
     });
