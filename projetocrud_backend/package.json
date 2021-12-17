@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "npx tsc",
     "build": "docker build . -t bia/projetocrudapi ",
-    "dev": "set NODE_ENV=development&& npx ts-node-dev ./src/server"
+    "dev": "set NODE_ENV=development&& npx ts-node-dev ./src/server",
+    "predockerize": "docker-compose down --rmi all",
+    "dockerize": "npx tsc && docker-compose up -d --force-recreate --build"
   },
   "keywords": [],
   "author": "",
